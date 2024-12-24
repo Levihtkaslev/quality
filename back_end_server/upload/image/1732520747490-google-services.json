@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "244993085769",
+    "project_id": "itquality-b3e55",
+    "storage_bucket": "itquality-b3e55.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244993085769:android:09406be0b01d2fd37f0a98",
+        "android_client_info": {
+          "package_name": "com.example.itquality"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw-TqdelLZukJp6nvUe2qjfojN1vFAeGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
