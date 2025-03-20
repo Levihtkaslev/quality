@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:itq/statics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:share_plus/share_plus.dart';
@@ -16,7 +17,7 @@ import 'package:printing/printing.dart';
 class formdeepview extends StatefulWidget {
 
   final String formid;
-  final bool receivedform;
+  final int receivedform;
   final String formStatus;
 
   const formdeepview({super.key, required this.formid, required this.receivedform, required this.formStatus});
@@ -40,7 +41,7 @@ Map<String, dynamic>? responseddetails;
 //***************************************************Submitted forms fetching******************************************** */
 
  Future<void> fetchformdetails() async {
-    final response = await http.get(Uri.parse('http://192.168.3.168:4000/formdetails/${widget.formid}'));
+    final response = await http.get(Uri.parse('$backendurl/formdetails/${widget.formid}'));
     if (response.statusCode == 200) {
       setState(() {
         formdetails = jsonDecode(response.body);
@@ -53,7 +54,7 @@ Map<String, dynamic>? responseddetails;
 //***************************************************Responded forms******************************************************* */
 
   Future<void> responsedformdetails() async {
-    final response = await http.get(Uri.parse('http://192.168.3.168:4000/respondiew/${widget.formid}'));
+    final response = await http.get(Uri.parse('$backendurl/respondiew/${widget.formid}'));
     if (response.statusCode == 200) {
       setState(() {
         responseddetails = jsonDecode(response.body);
@@ -306,7 +307,7 @@ Map<String, dynamic>? responseddetails;
               
                   //*************************Check is pending or cleared********************************* */
               
-                  if (widget.formStatus == 'Pending' && widget.receivedform)
+                  if (widget.formStatus == 'Pending' && widget.receivedform == 1)
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(

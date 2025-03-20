@@ -17,9 +17,11 @@ const Report = () => {
         totalreccom: 0,
     });
 
+    const backendbaseurl = process.env.REACT_APP_NODE_BACKEND_BASEURL
+
     // Fetch Locations
     useEffect(() => {
-        fetch("http://localhost:4000/locations")
+        fetch(`${backendbaseurl}/locations`)
             .then((response) => response.json())
             .then((data) => setLoc(data))
             .catch((err) => console.error("Error on fetching location: ", err));
@@ -28,7 +30,7 @@ const Report = () => {
     // Fetch Departments when Location Changes
     useEffect(() => {
         if (choosedLoc) {
-            fetch(`http://localhost:4000/departments?locationid=${choosedLoc}`)
+            fetch(`${backendbaseurl}/departments?locationid=${choosedLoc}`)
                 .then((response) => response.json())
                 .then((data) => setDepart(data))
                 .catch((err) => console.error("Error on fetching departments: ", err));
@@ -49,7 +51,7 @@ const Report = () => {
         }
     
         if (query) {
-            fetch(`http://localhost:4000/form?${query}`)
+            fetch(`${backendbaseurl}/form?${query}`)
                 .then((response) => response.json())
                 .then((data) => {
                     console.log("Fetched Forms:", data);

@@ -28,6 +28,8 @@ const Qdepartment = () => {
     const [showdeletemodal, setshowdeletemodal] = useState(false);
     const [deleteid, setdeleteid] = useState(null);
     const [showcancelmodal, setshowcancelmodal] = useState(false);
+
+    const backendbaseurl = process.env.REACT_APP_NODE_BACKEND_BASEURL
     
 
     useEffect(() => {
@@ -38,7 +40,7 @@ const Qdepartment = () => {
     //***********************************Listing Locations*************************************
 
     const getlocation = async() => {
-        const response = await fetch('http://localhost:4000/locations');
+        const response = await fetch(`${backendbaseurl}/locations`);
         const data = await response.json();
         console.log("Locations:", data);
         setlocation(data);
@@ -47,7 +49,7 @@ const Qdepartment = () => {
     //***********************************ListingDepartments*************************************
 
     const getdepartment = async(locationid ='') => {
-        const response = await fetch(locationid ? `http://localhost:4000/departments?locationid=${locationid}` : 'http://localhost:4000/departments');
+        const response = await fetch(locationid ? `${backendbaseurl}/departments?locationid=${locationid}` :`${backendbaseurl}/departments`);
         const data = await response.json();
         setdepartment(data);
     };
@@ -56,7 +58,7 @@ const Qdepartment = () => {
         const searching = search.toLowerCase();
         return(
             dept.departmentname.toLowerCase().includes(searching) ||
-            dept.targetname.toLowerCase().includes(searching) ||
+            dept.targetname.toLowerCase().includes(searching) || 
             dept.targetno.toLowerCase().includes(searching)
         );
     })
@@ -64,7 +66,7 @@ const Qdepartment = () => {
     //***********************************Creating Departments*************************************
 
     const createdepartment = async () => {
-        await fetch('http://localhost:4000/departments', {
+        await fetch(`${backendbaseurl}/departments`, {
             method : 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +83,7 @@ const Qdepartment = () => {
     //***********************************Updating Locations*************************************
 
     const updatedepartment = async () => {
-        await fetch(`http://localhost:4000/departments/${editdepartment._id}`, {
+        await fetch(`${backendbaseurl}/departments/${editdepartment._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -105,7 +107,7 @@ const Qdepartment = () => {
     //***********************************Deleting Locations*************************************
 
     const deletedepartment = async (id) => {
-        await fetch(`http://localhost:4000/departments/${id}`, {
+        await fetch(`${backendbaseurl}/departments/${id}`, {
             method: 'DELETE',
         });
         getdepartment(clickedlocation);
@@ -554,5 +556,6 @@ const Qdepartment = () => {
 };
 
 export default Qdepartment;
+
 
 //*************************************************************END OF DEPARTMENTS********************************************************************

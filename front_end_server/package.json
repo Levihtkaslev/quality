@@ -10,6 +10,8 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "firebase": "^11.2.0",
     "flowbite": "^2.5.2",
     "flowbite-react": "^0.10.2",
     "lottie-react": "^2.4.0",
@@ -18,7 +20,7 @@
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-tailwindcss-datepicker": "^1.7.2",
     "react-toastify": "^10.0.6",
     "react-tooltip": "^5.28.0",
@@ -51,7 +53,6 @@
   },
   "devDependencies": {
     "dayjs": "^1.11.6",
-    "react": "^17.0.2 || ^18.2.0",
     "tailwindcss": "^3.4.15"
   }
 }

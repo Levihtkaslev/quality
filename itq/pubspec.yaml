@@ -78,6 +78,7 @@ flutter:
     - assets/phone.gif
     - assets/spal.png
     - assets/pslogo.png
+    - assets/imageedit_2_9343474098.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -91,9 +92,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family:  MyFlutterApp
+    - family:  Roboto
       fonts:
-        - asset: fonts/MyFlutterApp.ttf
+        - asset: fonts/Roboto-VariableFont_wdth,wght.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:itq/statics.dart';
 import 'ticketdetails.dart';
+
 
 
 class receivedtick extends StatefulWidget {
@@ -54,7 +56,7 @@ class _receivedtickState extends State<receivedtick>with SingleTickerProviderSta
 
  Future<void> fetchreceivedforms() async {
   try {
-    final response = await http.get(Uri.parse("http://192.168.3.168:4000/formsreceived/${widget.departmentname}"));
+    final response = await http.get(Uri.parse("$backendurl/formsreceived/${widget.departmentname}"));
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       setState(() {
@@ -138,7 +140,7 @@ DateTime _parseDate(String dateString) {
 
 Future<void> pickDepartment(BuildContext context) async {
   try {
-    final response = await http.get(Uri.parse("http://192.168.3.168:4000/departments?locationid=${widget.locationid}"));
+    final response = await http.get(Uri.parse("$backendurl/departments?locationid=${widget.locationid}"));
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       final List<String> departments = data.map((dept) => dept['departmentname'] as String).toList();
@@ -219,7 +221,7 @@ void stopsearch() {
 Future<void> markasopened(String formid) async {
   try {
     final response = await http.put(
-      Uri.parse("http://192.168.3.168:4000/opened/$formid"),
+      Uri.parse("$backendurl/opened/$formid"),
       body: jsonEncode({'opened': true}),
       headers: {'Content-Type': 'application/json'},
     );
@@ -241,104 +243,130 @@ Future<void> markasopened(String formid) async {
     // ignore: unused_local_variable
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
+    // ignore: deprecated_member_use
+    return WillPopScope(
 
-  // ************************************************App bar searching**********************************************************
-
-      appBar: AppBar(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(20),)),
-        iconTheme: IconThemeData(color: Colors.white), 
-        backgroundColor: const Color.fromARGB(255, 9, 176, 241),
-        title: 
-        Padding(
-          padding:  EdgeInsets.only(bottom: width*0.2, top: width*0.2, left: width*0.02),
-          child: isSearching?TextField(
-            
-            autofocus: true,
-            decoration: InputDecoration(
-                    hintText: 'Search by subject...',
-                    border: InputBorder.none,
-                    hintStyle: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.03),
-                  ),
-                  onChanged: (value){
-                    setState(() {
-                      searchQuery = value;
-                      applyFilters();
-                    });
-                  },
-          ):Text("Received Forms",style: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.06),),
-        ),
-        actions: [
-          isSearching?IconButton(onPressed: stopsearch, icon: Icon(Icons.clear)): IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: startsearch,
-                ),
-          IconButton(
-            icon: Icon(Icons.filter_alt),
-            onPressed: openfilterdialog,
-          ),
-        ],
-        bottom: PreferredSize(preferredSize: Size.fromHeight(width*0.1), child: TabBar(controller: _tabController,
-        tabs: [
-          Tab(text: "Pending"),
-          Tab(text: "Completed",)],
-          labelColor: const Color.fromARGB(255, 255, 255, 255),
-          indicatorColor: Colors.white,
-        ),
-        ),
-      ),
-
-// ****************************************************Body Interface********************************************************
-      body: GestureDetector(
-        onTap: (){
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: Column(
-          children: [
-        
-             //***********************************Pending Complete Tab***************************** */
-        
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     ElevatedButton(onPressed: () {
-            //       setState(() {
-            //         pendingselected = true; 
-            //       });
-            //     }, child: Text("Pending")),
-            //     SizedBox(width: 10,),
-            //      ElevatedButton(
-            //       onPressed: () {
-            //         setState(() {
-            //           pendingselected = false;
-            //         });
-            //       },
-            //       child: Text('Completed'),
-            //     ),
-            //   ],
-            // ),
-        
-          //*****************************************Listing  Forms******************************** */
-        
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(color: Color.fromRGBO(251, 247, 252, 1), borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 10, offset: Offset(0, 4)
-                )]),
-        
-                child : TabBarView(
-                  controller: _tabController,
-                  children: [
-                    buildformlist(pendingforms, Colors.red),
-                    buildformlist(compltedform, Colors.green),
-                  ]
-                )
-               
+         onWillPop: () async {
+      bool shouldExit = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirm Exit', style: GoogleFonts.poppins(fontSize: width * 0.05)),
+            content: Text('Are you sure you want to exit?', style: GoogleFonts.poppins(fontSize: width * 0.04)),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false), // Dismiss dialog and don't exit
+                child: Text('No', style: GoogleFonts.poppins(color: Colors.red)),
               ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true), // Exit the page
+                child: Text('Yes', style: GoogleFonts.poppins(color: Colors.green)),
+              ),
+            ],
+          );
+        },
+      );
+      return shouldExit; 
+    },
+      child: Scaffold(
+      
+        // ************************************************App bar searching**********************************************************
+      
+        appBar: AppBar(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(20),)),
+          iconTheme: IconThemeData(color: Colors.white), 
+          backgroundColor: const Color.fromARGB(255, 9, 176, 241),
+          title: 
+          Padding(
+            padding:  EdgeInsets.only(bottom: width*0.2, top: width*0.2, left: width*0.02),
+            child: isSearching?TextField(
+              
+              autofocus: true,
+              decoration: InputDecoration(
+                      hintText: 'Search by subject...',
+                      border: InputBorder.none,
+                      hintStyle: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.03),
+                    ),
+                    onChanged: (value){
+                      setState(() {
+                        searchQuery = value;
+                        applyFilters();
+                      });
+                    },
+            ):Text("Received Forms",style: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.06),),
+          ),
+          actions: [
+            isSearching?IconButton(onPressed: stopsearch, icon: Icon(Icons.clear)): IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: startsearch,
+                  ),
+            IconButton(
+              icon: Icon(Icons.filter_alt),
+              onPressed: openfilterdialog,
             ),
           ],
+          bottom: PreferredSize(preferredSize: Size.fromHeight(width*0.1), child: TabBar(controller: _tabController,
+          tabs: [
+            Tab(text: "Pending"),
+            Tab(text: "Completed",)],
+            labelColor: const Color.fromARGB(255, 255, 255, 255),
+            indicatorColor: Colors.white,
+          ),
+          ),
+        ),
+      
+      // ****************************************************Body Interface********************************************************
+        body: GestureDetector(
+          onTap: (){
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Column(
+            children: [
+          
+               //***********************************Pending Complete Tab***************************** */
+          
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     ElevatedButton(onPressed: () {
+              //       setState(() {
+              //         pendingselected = true; 
+              //       });
+              //     }, child: Text("Pending")),
+              //     SizedBox(width: 10,),
+              //      ElevatedButton(
+              //       onPressed: () {
+              //         setState(() {
+              //           pendingselected = false;
+              //         });
+              //       },
+              //       child: Text('Completed'),
+              //     ),
+              //   ],
+              // ),
+          
+            //*****************************************Listing  Forms******************************** */
+          
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(color: Color.fromRGBO(251, 247, 252, 1), borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10, offset: Offset(0, 4)
+                  )]),
+          
+                  child : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      buildformlist(pendingforms, Colors.red),
+                      buildformlist(compltedform, Colors.green),
+                    ]
+                  )
+                 
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -383,7 +411,8 @@ Future<void> markasopened(String formid) async {
                      
                       if(isunopened)
                       Container(
-                         height: width*0.03, width: width*0.06,
+                         height: width*0.04, width: width*0.2,
+                         
                          decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(12),
@@ -411,7 +440,7 @@ Future<void> markasopened(String formid) async {
                   onTap: () async {
                     await markasopened(eachform['_id']);
                     final refresh = await Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => formdeepview(formid : eachform['_id'], receivedform: true, formStatus: eachform['status']),
+                      context, MaterialPageRoute(builder: (context) => formdeepview(formid : eachform['_id'], receivedform: 1, formStatus: eachform['status']),
                       
                      )
                     );

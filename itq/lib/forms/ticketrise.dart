@@ -8,6 +8,7 @@ import 'dart:convert';
 
 // ignore: unused_import
 import 'package:itq/forms/homee.dart';
+import 'package:itq/statics.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -62,7 +63,7 @@ class _risetickState extends State<risetick> {
   // ****************************************************Department Fetching***************************************************
 
    Future<void> getdepartments() async {
-    final response = await http.get(Uri.parse('http://192.168.3.168:4000/departments?locationid=${widget.locationid}'));
+    final response = await http.get(Uri.parse('$backendurl/departments?locationid=${widget.locationid}'));
     if (response.statusCode == 200) {
       setState(() {
         departments = jsonDecode(response.body);
@@ -156,7 +157,7 @@ void Confirmation() {
 
   Future<void> submitform() async {
     final response = await http.post(
-      Uri.parse('http://192.168.3.168:4000/form'),
+      Uri.parse('$backendurl/form'),
       headers: <String, String>{'Content-Type': 'application/json'},
       body: jsonEncode({
         'fromdepartment': widget.departmentname,
@@ -226,10 +227,10 @@ void Confirmation() {
               padding: EdgeInsets.all(width*0.06),
               decoration: BoxDecoration( color: const Color.fromARGB(255, 254, 244, 255), border: Border.all(width: width*0.003, color:  Colors.transparent,),borderRadius: BorderRadius.circular(12), boxShadow: [ // Adding a shadow
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.5), // Shadow color
-                    spreadRadius: 3, // How far the shadow spreads
-                    blurRadius: 7,   // How blurry the shadow is
-                    offset: const Offset(0, 3), // Position of the shadow (x, y)
+                    color: Colors.grey.withOpacity(0.5), 
+                    spreadRadius: 3, 
+                    blurRadius: 7,   
+                    offset: const Offset(0, 3), 
                   ),
                 ],),
               child: Column(

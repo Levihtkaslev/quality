@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:itq/statics.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'dart:convert';
 // ignore: unused_import
@@ -94,7 +95,7 @@ void Confirmation(){
               onPressed: () async{
                 Navigator.of(context).pop();
                 await submitresponse(); 
-                showQuickAlert(context);
+                
               },
             ),
             
@@ -107,7 +108,7 @@ void Confirmation(){
 
     Future<void> submitresponse() async {
     final response = await http.post(
-      Uri.parse('http://192.168.3.168:4000/response'),
+      Uri.parse('$backendurl/response'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'reqformid': widget.ticketid,

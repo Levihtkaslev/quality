@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:itq/statics.dart';
 import 'ticketdetails.dart';
 
 class submittedtick extends StatefulWidget {
@@ -51,7 +52,7 @@ class _SubmittedTickPageState extends State<submittedtick>
   Future<void> fetchSubmittedForms() async {
     try {
       final response = await http.get(
-        Uri.parse("http://192.168.3.168:4000/formsubmitted/${widget.departmentname}"),
+        Uri.parse("$backendurl/formsubmitted/${widget.departmentname}"),
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -125,7 +126,7 @@ class _SubmittedTickPageState extends State<submittedtick>
   Future<void> pickDepartment(BuildContext context) async {
     try {
       final response = await http.get(
-        Uri.parse("http://192.168.3.168:4000/departments/${widget.locationid}"),
+        Uri.parse("$backendurl/departments/${widget.locationid}"),
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -214,82 +215,107 @@ class _SubmittedTickPageState extends State<submittedtick>
     // ignore: unused_local_variable
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(20),)),
-        iconTheme: IconThemeData(color: Colors.white), 
-        backgroundColor: const Color.fromARGB(255, 9, 176, 241),
-        title: isSearching
-            ? Padding(
-              padding: EdgeInsets.only(bottom: width*0.2, top: width*0.2, left: width*0.02),
-              child: TextField(
-                  autofocus: true,
-                  decoration:  InputDecoration(
-                    hintText: 'Search by subject...',
-                    hintStyle: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.06),
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      searchQuery = value;
-                      applyFilters();
-                    });
-                  },
-                ),
-            )
-            : Padding(
-              padding: EdgeInsets.only(bottom: width*0.2, top: width*0.2, left: width*0.02),
-              child:  Text("Submitted Forms", style: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.06),),
-            ),
-        actions: [
-          isSearching
-              ? IconButton(
-                  onPressed: stopSearch,
-                  icon: const Icon(Icons.clear),
-                )
-              : IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: startSearch,
-                ),
-          IconButton(
-            icon: const Icon(Icons.filter_alt),
-            onPressed: openFilterDialog,
-          ),
-        ],
-        bottom: PreferredSize(preferredSize: Size.fromHeight(width*0.1), child: TabBar(controller: _tabController, 
-        tabs: [
-          Tab(text: "Pending"),
-          Tab(text: "Completed",)],
-        labelColor: const Color.fromARGB(255, 255, 255, 255),
-        indicatorColor: Colors.white,
-         )
-        ),
-      ),
-
-      body: GestureDetector(
-        onTap: (){
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: Column(
-          children: [
-            
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(color:  Color.fromRGBO(251, 247, 252, 1), borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 10, offset: Offset(0, 4)
-                )]),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildFormList(pendingForms, Colors.red),
-                    _buildFormList(completedForms, Colors.green),
-                  ],
-                ),
+    // ignore: deprecated_member_use
+    return WillPopScope(
+         onWillPop: () async {
+      bool shouldExit = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirm Exit', style: GoogleFonts.poppins(fontSize: width * 0.05)),
+            content: Text('Are you sure you want to exit?', style: GoogleFonts.poppins(fontSize: width * 0.04)),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false), // Dismiss dialog and don't exit
+                child: Text('No', style: GoogleFonts.poppins(color: Colors.red)),
               ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true), // Exit the page
+                child: Text('Yes', style: GoogleFonts.poppins(color: Colors.green)),
+              ),
+            ],
+          );
+        },
+      );
+      return shouldExit; 
+    },
+      child: Scaffold(
+        appBar: AppBar(
+         shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(20),)),
+          iconTheme: IconThemeData(color: Colors.white), 
+          backgroundColor: const Color.fromARGB(255, 9, 176, 241),
+          title: isSearching
+              ? Padding(
+                padding: EdgeInsets.only(bottom: width*0.2, top: width*0.2, left: width*0.02),
+                child: TextField(
+                    autofocus: true,
+                    decoration:  InputDecoration(
+                      hintText: 'Search by subject...',
+                      hintStyle: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.06),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value;
+                        applyFilters();
+                      });
+                    },
+                  ),
+              )
+              : Padding(
+                padding: EdgeInsets.only(bottom: width*0.2, top: width*0.2, left: width*0.02),
+                child:  Text("Submitted Forms", style: GoogleFonts.poppins(color: Colors.white, fontSize: width*0.06),),
+              ),
+          actions: [
+            isSearching
+                ? IconButton(
+                    onPressed: stopSearch,
+                    icon: const Icon(Icons.clear),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: startSearch,
+                  ),
+            IconButton(
+              icon: const Icon(Icons.filter_alt),
+              onPressed: openFilterDialog,
             ),
           ],
+          bottom: PreferredSize(preferredSize: Size.fromHeight(width*0.1), child: TabBar(controller: _tabController, 
+          tabs: [
+            Tab(text: "Pending"),
+            Tab(text: "Completed",)],
+          labelColor: const Color.fromARGB(255, 255, 255, 255),
+          indicatorColor: Colors.white,
+           )
+          ),
+        ),
+      
+        body: GestureDetector(
+          onTap: (){
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Column(
+            children: [
+              
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(color:  Color.fromRGBO(251, 247, 252, 1), borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10, offset: Offset(0, 4)
+                  )]),
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildFormList(pendingForms, Colors.red),
+                      _buildFormList(completedForms, Colors.green),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -357,7 +383,7 @@ class _SubmittedTickPageState extends State<submittedtick>
                 MaterialPageRoute(
                   builder: (context) => formdeepview(
                     formid: form['_id'],
-                    receivedform: true,
+                    receivedform: 0,
                     formStatus: form['status'],
                   ),
                 ),

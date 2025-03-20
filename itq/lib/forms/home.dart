@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:itq/forms/bfortick.dart';
-import 'package:itq/my_flutter_app_icons.dart';
 import '../log/logout.dart';
 import 'homee.dart';
 import 'receivedticket.dart';
@@ -125,11 +124,11 @@ class _home_pageState extends State<home_page> {
         fontSize: 10,
       ),
       items: [
-        BottomNavigationBarItem(icon: _buildIcon(MyFlutterApp.home_1, 0),label: 'Home',),
-        BottomNavigationBarItem(icon: _buildIcon(MyFlutterApp.scroll,1),label: 'Inbox',),
-        BottomNavigationBarItem(icon: _buildIcon(MyFlutterApp.hand_pointer,2),label: 'Rise',),
-        BottomNavigationBarItem(icon: _buildIcon(MyFlutterApp.clock_circled,3),label: 'History',),
-        BottomNavigationBarItem(icon: _buildIcon(MyFlutterApp.user,4),label: 'Profile',),
+        BottomNavigationBarItem(icon: _buildIcon(Icons.home_rounded, 0),label: 'Home',),
+        BottomNavigationBarItem(icon: _buildIcon(Icons.emoji_people_rounded,1),label: 'Inbox',),
+        BottomNavigationBarItem(icon: _buildIcon(Icons.touch_app ,2),label: 'Rise',),
+        BottomNavigationBarItem(icon: _buildIcon(Icons.add_to_home_screen,3),label: 'Sent',),
+        BottomNavigationBarItem(icon: _buildIcon(Icons.contacts_rounded,4),label: 'Profile',),
       ],
     ),
   ),

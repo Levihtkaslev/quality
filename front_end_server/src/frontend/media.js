@@ -21,6 +21,8 @@ const Mediadb = () => {
   const [showupdatemodal, setshowupdatemodal] = useState(false);
   const [showcancelmodal, setshowcancelmodal] = useState(false);
 
+  const backendbaseurl = process.env.REACT_APP_NODE_BACKEND_BASEURL
+
 
   useEffect(() => {
     getMedia();
@@ -29,7 +31,7 @@ const Mediadb = () => {
   // Fetch media data
   const getMedia = async () => {
     try {
-        const response = await fetch("http://localhost:4000/media/upload");
+        const response = await fetch(`${backendbaseurl}/media/upload`);
         const data = await response.json();
 
         // Check if `data` is an array
@@ -111,7 +113,7 @@ const Mediadb = () => {
     }
   
     try {
-      await fetch("http://localhost:4000/media/upload", {
+      await fetch(`${backendbaseurl}/media/upload`, {
         method: "POST",
         body: formData,
       });
@@ -154,7 +156,7 @@ const Mediadb = () => {
     }
   
     try {
-      const response = await fetch(`http://localhost:4000/media/upload/${editingId}`, {
+      const response = await fetch(`${backendbaseurl}/media/upload/${editingId}`, {
         method: "PUT",
         body: formData,
       });
@@ -195,7 +197,7 @@ const Mediadb = () => {
 
   // Delete media handler
   const deleteMedia = async (id) => {
-    await fetch(`http://localhost:4000/media/upload/${id}`, {
+    await fetch(`${backendbaseurl}/media/upload/${id}`, {
       method: "DELETE",
     });
     getMedia();
@@ -403,7 +405,7 @@ const Mediadb = () => {
         <div className='depinputblock'>
           <label className='dropdownlabel'>Current Image:</label>
           <img
-            src={`http://localhost:4000/media/upload/${existingFileName}`}
+            src={`${backendbaseurl}/media/upload/${existingFileName}`}
             alt=""
             width="100"
           />
@@ -430,7 +432,7 @@ const Mediadb = () => {
             <input type="file" onChange={handleFileChange}  className="text-gray-600 cursor-pointer"/>
           </div>
           <div className="">
-            <img src={`http://localhost:4000/media/upload/${existingFileName}`} alt="" width="100" />
+            <img src={`${backendbaseurl}/media/upload/${existingFileName}`} alt="" width="100" />
             <button onClick={removeCurrentFile}>        </button>
           </div>
         </div>
@@ -486,7 +488,7 @@ const Mediadb = () => {
               <td class="tc">
                 {media.type === "image" ? (
                   <img
-                    src={`http://localhost:4000/media/uploads/${media.url}`}
+                    src={`${backendbaseurl}/media/uploads/${media.url}`}
                     alt={media.title}
                     width="50"
                   />

@@ -28,6 +28,8 @@ const Mainform = () => {
   const [currentPage, setCurrentPage] = useState(1); 
   const [itemsPerPage, setItemsPerPage] = useState(10); 
 
+  const backendbaseurl = process.env.REACT_APP_NODE_BACKEND_BASEURL
+
 
   useEffect(() => {
     getforms();
@@ -154,7 +156,7 @@ const Mainform = () => {
 
   const getforms = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/form");
+      const response = await axios.get(`${backendbaseurl}/form`);
       setmforms(response.data);
       setfilterforms(response.data);
     } catch (error) {
@@ -164,7 +166,7 @@ const Mainform = () => {
 
   const getlocation = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/locations");
+      const response = await axios.get(`${backendbaseurl}/locations`);
       setlocation(response.data);
     } catch (error) {
       console.log("Error getting location", error);
@@ -174,7 +176,7 @@ const Mainform = () => {
   const getdepartment = async (location) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/departments?locationid=${location}`
+        `${backendbaseurl}/departments?locationid=${location}`
       );
       setdepartment(response.data);
       console.log(response.data);
@@ -184,7 +186,7 @@ const Mainform = () => {
   };
 const confirmdelete = async (deleteid) => {
   try {
-    await axios.delete(`http://localhost:4000/form/${deleteid}`);
+    await axios.delete(`${backendbaseurl}/form/${deleteid}`);
     getforms(); 
   } catch (error) {
     console.log("Error deleting form", error);
@@ -210,7 +212,7 @@ const confirmdelete = async (deleteid) => {
 const viewmore = async (form) => {
     setchoosed(form);
     setshowmore(true);
-    const res = await fetch(`http://localhost:4000/respondiew/${form._id}`)
+    const res = await fetch(`${backendbaseurl}/respondiew/${form._id}`)
     const ress = await res.json();
     if (ress) {
         setresponseform(ress);
@@ -232,7 +234,7 @@ const viewmore = async (form) => {
   return (
     <div class="outer1box">
       
-      <div class="outerheader">
+      <div className="outerheader">
           <div className="m-11">
           <div className='flex flex-col gap-2'>
           <h2 class=" font-semibold text-3xl text-white">Ticket Forms</h2> 
@@ -645,6 +647,7 @@ const viewmore = async (form) => {
           <p>From: {choosed.fromdepartment}</p>
           <p>To: {choosed.todepartment}</p>
           <p>Subject: {choosed.subject}</p>
+          <p>Description : {choosed.description}</p>
           <p>Status: {choosed.status}</p>
           <p>Clinical: {choosed.clinical}</p>
           <p>Operational: {choosed.operational}</p>

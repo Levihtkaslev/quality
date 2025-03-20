@@ -19,9 +19,7 @@ class Myhome extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        title: 'Login',
-       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+       
       home: const splashscr(),
     );
   }

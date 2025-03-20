@@ -12,7 +12,10 @@ const Qlocation = () => {
     const [confirmcreate, setconfirmcreate] = useState(false);
     const [showcreatemodal, setshowcreatemodal] = useState(false);
     const [showdeletemodal, setshowdeletemodal] = useState(false);
-    const [deleteid, setdeleteid] = useState(null);    
+    const [deleteid, setdeleteid] = useState(null);   
+    
+    const backendbaseurl = process.env.REACT_APP_NODE_BACKEND_BASEURL
+    
     useEffect(() => {
         getlocation();
     },[]);
@@ -20,7 +23,7 @@ const Qlocation = () => {
     // ***********************************Location Fetching*************************************
 
     const getlocation = async () =>{
-        const response = await fetch('http://localhost:4000/locations');
+        const response = await fetch(`${backendbaseurl}/locations`);
         const responseddata = await response.json();
         setlocation(responseddata);
     };
@@ -28,7 +31,7 @@ const Qlocation = () => {
      // ***********************************Create Location*************************************
 
     const createlocation = async () => {
-        await fetch('http://localhost:4000/locations', {
+        await fetch(`${backendbaseurl}/locations`, {
             method : "POST",
             headers : {
                 'content-type' : 'application/json',
@@ -44,7 +47,7 @@ const Qlocation = () => {
      // ***********************************Updating Location*************************************
 
     const updatelocation = async (id) => {
-        await fetch(`http://localhost:4000/locations/${id}`, {
+        await fetch(`${backendbaseurl}/locations/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +62,7 @@ const Qlocation = () => {
      // ***********************************Deleting Location*************************************
 
     const deletelocation = async (id) => {
-        await fetch(`http://localhost:4000/locations/${id}`,{
+        await fetch(`${backendbaseurl}/locations/${id}`,{
             method : "DELETE",
         });
         getlocation();

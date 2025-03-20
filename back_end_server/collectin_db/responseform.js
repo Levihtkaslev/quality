@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
 const resform = new mongoose.Schema({
-    reqformid :{type : mongoose.Schema.Types.ObjectId, ref : "form", required: true},
-    explanation : { type : String, required: true},
-    causes : { type : String, required: true},
+    reqformid :{type : mongoose.Schema.Types.ObjectId, ref : "form"},
+    explanation : { type : String},
+    causes : { type : String},
     isprevented : { type : Boolean},
     notprereason : { type : String},
-    futurepreaction : { type : String, required: true},
+    futurepreaction : { type : String,},
     immediate : {type : String},
     actiontype : [{ type : String}],
-    resofimple : { type : String, required: true},
-    capa : { type : String, required: true},
+    resofimple : { type : String},
+    capa : { type : String},
     createdtime : { type: Date }
 });
 
